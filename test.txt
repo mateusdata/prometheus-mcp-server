@@ -1,0 +1,39 @@
+{
+  "regras": {
+    "estoque_minimo": 10,
+    "quantidade_maxima_por_item": 50
+  },
+  "promocoes": {
+    "arroz": {
+      "desconto": 10
+    },
+    "feijao": {
+      "desconto": 15
+    },
+    "banana": {
+      "desconto": 5
+    }
+  },
+  "sugestoes_categoria": {
+    "graos": [
+      "feijao",
+      "arroz"
+    ],
+    "frutas": [
+      "banana"
+    ],
+    "carnes": [
+      "frango",
+      "carne"
+    ],
+    "laticinios": [
+      "leite"
+    ],
+    "limpeza": [
+      "detergente"
+    ]
+  },
+  "metas": {
+    "receita_diaria": 500
+  }
+}
