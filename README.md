@@ -26,6 +26,13 @@ npx prometheus-mcp-server
 
 ## Usage
 
+
+```bash
+npm install
+npm run build
+npm start
+```
+
 Set the `PROMETHEUS_HOST` environment variable to your Prometheus instance URL.
 
 Example Claude Desktop config:
@@ -55,10 +62,3 @@ Example Claude Desktop config:
 - `mcp__get_rules`
 - `mcp__get_status`
 
-## Development
-
-```bash
-npm install
-npm run build
-npm start
-```# prometheus-mcp-server
