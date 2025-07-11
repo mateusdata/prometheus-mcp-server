@@ -7,7 +7,7 @@
     "prometheus-mcp-server": "./build/index.js"
   },
   "scripts": {
-    "build": "tsc && find src -type f ! -name '*.ts' -exec bash -c 'cp --parents \"$0\" build/' {} \\; && find build/src -mindepth 1 -exec mv -t build/ {} + && rm -r build/src && chmod +x build/index.js",
+    "build": "tsc",
     "prepare": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "inspect": "tsc && node --inspect build/index.js",
@@ -24,6 +24,8 @@
   "description": "",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.15.0",
+    "dotenv": "^17.2.0",
+    "node-thermal-printer": "^4.5.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {

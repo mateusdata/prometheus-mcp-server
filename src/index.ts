@@ -5,11 +5,14 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 import { readFile } from 'fs/promises';
 import { completable } from "@modelcontextprotocol/sdk/server/completable.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 // Get Prometheus base URL from environment variable or use default
-const PROMETHEUS_HOST = process.env.PROMETHEUS_HOST || "http://localhost:9090";
-const PROMETHEUS_API_BASE = `${PROMETHEUS_HOST}/api/v1`;
+const PROMETHEUS_URL = process.env.PROMETHEUS_URL || "http://localhost:9090";
+const PROMETHEUS_API_BASE = `${PROMETHEUS_URL}/api/v1`;
 const USER_AGENT = "prometheus-client/1.0";
+const SERVICE_URL = process.env.SERVICE_URL || "localhost:3000";
 
 // Create server instance
 const server = new McpServer({
@@ -19,8 +22,8 @@ const server = new McpServer({
 });
 
 
-const context = await readFile(new URL('./rules.json', import.meta.url), 'utf-8' );
-
+//const context = await readFile(new URL('./rules.json', import.meta.url), 'utf-8' );
+/*
 server.resource(
   "context-prometheus",
   new ResourceTemplate("context://prometheus", { list: undefined }),
@@ -40,6 +43,7 @@ server.resource(
     };
   }
 );
+*/
 
 
 
@@ -74,7 +78,7 @@ const METRICAS_SUGERIDAS = [
   "user_request_latency_summary_seconds"
 ];
 
-// Registro do prompt com preenchimento automático baseado em métricas conhecidas
+// Prompts para consultas de métricas
 server.registerPrompt(
   "query-metrica",
   {
@@ -98,8 +102,10 @@ server.registerPrompt(
   })
 );
 
-
-
+const fetchMetrics = async  ()=> {
+  const response = await fetch(`${SERVICE_URL}/metrics`);
+  return response.text();
+}
 // Prompt com preenchimento automático contextualizado
 server.registerPrompt(
   "saudacao",
@@ -143,6 +149,7 @@ server.tool(
   "Consultes as regras e diretrizes para fazer queries e interagir com o Prometheus",
   {},
   async () => {
+    const rules  =  await fetchMetrics();
   
     return {
       content: [
@@ -152,8 +159,8 @@ server.tool(
             title: "Regras e Diretrizes do Prometheus",
             description:
               "use sempre as regras e diretiries das rules desse json",
-            rules: JSON.parse(context),
-          }, null, 2), 
+            rules: rules,
+          }),
         },
       ],
     };
@@ -933,7 +940,8 @@ async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
   console.error("Prometheus MCP Server running on stdio");
-  console.error(`Connected to Prometheus at: ${PROMETHEUS_HOST}`);
+  console.error(`Connected to Prometheus at: ${PROMETHEUS_URL}`);
+  console.error(`Service URL: ${SERVICE_URL}`);
 }
 
 main().catch((error) => {
